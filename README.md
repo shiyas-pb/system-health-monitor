@@ -1,35 +1,69 @@
-### Simple System Monitor Script
+### 🖥️ Production System Health Monitor (Bash)
 
-This is a very basic Linux shell script.
+A production-grade system health monitoring script written in Bash, designed for Linux servers.
+It performs defensive, low-level checks using /proc, escalates severity correctly.
 
-It shows:
-- CPU usage
-- Memory usage
-- Disk usage
+This project focuses on correctness, portability, and operational robustness.
 
-## What you need
-- Linux system
-- Bash shell
+### 📌 Features
 
-## How to run
+✅ CPU usage calculation using /proc/stat (delta-based, not top)
 
-1. Save the script as `system_monitor.sh`
+✅ Memory usage based on MemAvailable (modern Linux accounting)
 
-2. Give execute permission:
-   ```bash
-   chmod +x system_health.sh
-   ```
-3. Run the script:
-   ```bash
-   ./system_health.sh
-   ```
+✅ Disk usage monitoring for /
 
-### What the commands mean
+✅ Load average validation with configurable tolerance
 
-top → shows CPU usage
+✅ Severity escalation (OK → WARNING → ERROR)
 
-free → shows memory usage
+✅ Safe logging that never crashes the script
 
-df → shows disk usage
+✅ Environment-configurable thresholds
 
-awk → picks specific values from output
+✅ Portable across RHEL, Rocky, Ubuntu, and most containers
+
+### 📂 Project Structure
+```bash
+.
+├── system_health.sh
+└── README.md
+```
+
+## ⚙️ Requirements
+
+Linux kernel with /proc filesystem
+
+Bash 
+
+Standard utilities:
+
+awk
+
+df
+
+hostname
+
+nproc
+
+No external dependencies.
+
+## Usage
+1️⃣ Make the script executable
+```bash
+chmod +x system_health.sh
+```
+2️⃣ Run manually
+```bash
+./system_health.sh
+```
+## 🔧 Configuration (Environment Variables)
+
+All thresholds are runtime-configurable — no code changes required.
+| Variable         | Default                      | Description                              |
+| ---------------- | ---------------------------- | ---------------------------------------- |
+| `CPU_THRESHOLD`  | `80`                         | CPU usage warning threshold (%)          |
+| `MEM_THRESHOLD`  | `80`                         | Memory usage warning threshold (%)       |
+| `DISK_THRESHOLD` | `85`                         | Disk usage warning threshold (%)         |
+| `LOAD_FACTOR`    | `1.5`                        | Load > `cores × factor` triggers warning |
+| `LOG_FILE`       | `/var/log/system_health.log` | Log file path                            |
